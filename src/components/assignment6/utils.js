@@ -55,41 +55,41 @@ function groupByAirport(data) {
 }
 
 function groupByCity(data) {
-    // Iterate over each route, grouping by city, considering both source and destination cities
+
     let result = data.reduce((result, d) => {
-        // Unique key for the destination city (combining city and country)
-        let destKey = d.DestCity + ', ' + d.DestCountry;
-        let currentDest = result[destKey] || {
+        // Handle the destination city
+        let currentDest = result[d.DestCity] || {
+            "Airport": d.DestAirport,
+            "AirportID": d.DestAirportID,
             "City": d.DestCity,
             "Country": d.DestCountry,
             "Latitude": +d.DestLatitude,
             "Longitude": +d.DestLongitude,
             "Count": 0
-        };
+        }
         currentDest.Count += 1;
-        result[destKey] = currentDest;
+        result[d.DestCity] = currentDest;
 
-        // Unique key for the source city
-        let sourceKey = d.SourceCity + ', ' + d.SourceCountry;
-        let currentSource = result[sourceKey] || {
+        // Handle the source city
+        let currentSource = result[d.SourceCity] || {
+            "Airport": d.SourceAirport,
+            "AirportID": d.SourceAirportID,
             "City": d.SourceCity,
             "Country": d.SourceCountry,
             "Latitude": +d.SourceLatitude,
             "Longitude": +d.SourceLongitude,
             "Count": 0
-        };
+        }
         currentSource.Count += 1;
-        result[sourceKey] = currentSource;
+        result[d.SourceCity] = currentSource;
 
         return result;
     }, {});
 
-    // Convert the result object into an array
+    // Convert the resulting dictionary into a list
     result = Object.keys(result).map(key => result[key]);
 
-    // Sort the result by Count in descending order
-    result = result.sort((a, b) => b.Count - a.Count);
-
+    // Return the list
     return result;
 }
 
